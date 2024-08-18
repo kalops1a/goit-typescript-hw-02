@@ -7,28 +7,22 @@ import Loader from './components/Loader/Loader';
 import ImageModal from './components/ImageModal/ImageModal';
 import ErrorMessage from './components/ErrorMessage/ErrorMessage';
 import styles from './App.module.css';
+import { GalleryImage } from './types';
 
-
-interface Image {
-  id: string;
-  urls: { small: string; regular: string };
-  alt_description: string;
-}
-
-const App: React.FC = () => {
-  const [images, setImages] = useState<Image[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+const App = () => {
+  const [images, setImages] = useState<GalleryImage[]>([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState<string>('');
   const [page, setPage] = useState<number>(1);
-  const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
 
   const searchImages = async (query: string, page: number = 1) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await axios.get('https://api.unsplash.com/search/photos', {
+      const response = await axios.get(`https://api.unsplash.com/search/photos`, {
         params: {
           query,
           page,
@@ -39,10 +33,16 @@ const App: React.FC = () => {
       if (page === 1) {
         setImages(response.data.results);
       } else {
-        setImages((prevImages) => [...prevImages, ...response.data.results]);
+        setImages(prevImages => [...prevImages, ...response.data.results]);
       }
-    } catch (error: any) {
-      setError(error.message);
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        setError(`Error: ${err.response.statusText}`);
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }

@@ -3,13 +3,12 @@ import styles from './ImageGallery.module.css';
 
 interface GalleryImage {
   id: string;
-  description: string;
   urls: {
+    small: string;
     regular: string;
-    small: string; 
   };
+  description: string; 
 }
-
 interface ImageGalleryProps {
   images: GalleryImage[];
   onImageClick: (image: GalleryImage) => void;

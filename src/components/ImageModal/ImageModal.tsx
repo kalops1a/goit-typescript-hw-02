@@ -4,8 +4,11 @@ import styles from './ImageModal.module.css';
 
 interface Image {
   id: string;
-  urls: { regular: string };
-  description: string;
+  urls: {
+    small: string;
+    regular: string;
+  };
+  description?: string; 
 }
 
 interface ImageModalProps {
