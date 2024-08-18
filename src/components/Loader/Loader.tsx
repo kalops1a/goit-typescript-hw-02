@@ -5,13 +5,10 @@ const Loader = () => {
   return (
     <div className={styles.loader}>
       <Audio
-        height="80"
-        width="80"
-        radius="9"
+        height={80}
+        width={80}
+        radius={9}
         color="green"
-        ariaLabel="loading"
-        wrapperStyle={{}}
-        wrapperClass=""
       />
     </div>
   );

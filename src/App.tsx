@@ -8,24 +8,31 @@ import ImageModal from './components/ImageModal/ImageModal';
 import ErrorMessage from './components/ErrorMessage/ErrorMessage';
 import styles from './App.module.css';
 
-const App = () => {
-  const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(null);
 
-  const searchImages = async (query, page = 1) => {
+interface Image {
+  id: string;
+  urls: { small: string; regular: string };
+  alt_description: string;
+}
+
+const App: React.FC = () => {
+  const [images, setImages] = useState<Image[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState<string>('');
+  const [page, setPage] = useState<number>(1);
+  const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+
+  const searchImages = async (query: string, page: number = 1) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await axios.get(`https://api.unsplash.com/search/photos`, {
+      const response = await axios.get('https://api.unsplash.com/search/photos', {
         params: {
           query,
           page,
-          client_id: 'yAbV-TMOSsUiXLQ4zombON14Oh9M9I6dufuwM3W6iPU' 
+          client_id: 'yAbV-TMOSsUiXLQ4zombON14Oh9M9I6dufuwM3W6iPU'
         }
       });
 
@@ -34,14 +41,14 @@ const App = () => {
       } else {
         setImages((prevImages) => [...prevImages, ...response.data.results]);
       }
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSearch = (query) => {
+  const handleSearch = (query: string) => {
     setQuery(query);
     setPage(1);
     searchImages(query, 1);
